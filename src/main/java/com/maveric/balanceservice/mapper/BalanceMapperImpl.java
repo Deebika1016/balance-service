@@ -42,4 +42,17 @@ public class BalanceMapperImpl implements BalanceMapper {
         }
         return list;
     }
+
+    @Override
+    public List<BalanceDto> mapToDto(List<Balance> balances) {
+        return balances.stream().map(balanceDto -> new BalanceDto(
+                balanceDto.get_id(),
+                balanceDto.getAccountId(),
+                balanceDto.getAmount(),
+                balanceDto.getCurrency(),
+                balanceDto.getCreatedAt(),
+                balanceDto.getUpdatedAt()
+        )).toList();
+    }
+
 }
