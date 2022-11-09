@@ -1,0 +1,168 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > BalanceMapperImpl</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.maveric.balanceservice.mapper</a>
+</div>
+
+<h1>Coverage Summary for Class: BalanceMapperImpl (com.maveric.balanceservice.mapper)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">BalanceMapperImpl</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    14.3%
+  </span>
+  <span class="absValue">
+    (1/7)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    2.9%
+  </span>
+  <span class="absValue">
+    (1/35)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.maveric.balanceservice.mapper;
+&nbsp;
+&nbsp;import com.maveric.balanceservice.dto.BalanceDto;
+&nbsp;import com.maveric.balanceservice.model.Balance;
+&nbsp;import org.springframework.stereotype.Component;
+&nbsp;import java.util.Collections;
+&nbsp;import java.util.List;
+&nbsp;
+&nbsp;@Component
+<b class="fc">&nbsp;public class BalanceMapperImpl implements BalanceMapper {</b>
+&nbsp;    @Override
+&nbsp;    public Balance map(BalanceDto balanceDto) {
+<b class="nc">&nbsp;        return new Balance(</b>
+<b class="nc">&nbsp;                balanceDto.get_id(),</b>
+<b class="nc">&nbsp;                balanceDto.getAccountId(),</b>
+<b class="nc">&nbsp;                balanceDto.getAmount(),</b>
+<b class="nc">&nbsp;                balanceDto.getCurrency(),</b>
+<b class="nc">&nbsp;                balanceDto.getCreatedAt(),</b>
+<b class="nc">&nbsp;                balanceDto.getUpdatedAt()</b>
+&nbsp;        );
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public BalanceDto map(Balance balance) {
+<b class="nc">&nbsp;        return new BalanceDto(</b>
+<b class="nc">&nbsp;                balance.get_id(),</b>
+<b class="nc">&nbsp;                balance.getAccountId(),</b>
+<b class="nc">&nbsp;                balance.getAmount(),</b>
+<b class="nc">&nbsp;                balance.getCurrency(),</b>
+<b class="nc">&nbsp;                balance.getCreatedAt(),</b>
+<b class="nc">&nbsp;                balance.getUpdatedAt()</b>
+&nbsp;        );
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public List&lt;Balance&gt; mapToModel(List&lt;BalanceDto&gt; balanceDtos) {
+<b class="nc">&nbsp;        if(!balanceDtos.isEmpty())</b>
+<b class="nc">&nbsp;            return balanceDtos.stream().map(balance -&gt; new Balance(</b>
+<b class="nc">&nbsp;                    balance.get_id(),</b>
+<b class="nc">&nbsp;                    balance.getAccountId(),</b>
+<b class="nc">&nbsp;                    balance.getAmount(),</b>
+<b class="nc">&nbsp;                    balance.getCurrency(),</b>
+<b class="nc">&nbsp;                    balance.getCreatedAt(),</b>
+<b class="nc">&nbsp;                    balance.getUpdatedAt()</b>
+<b class="nc">&nbsp;            )).toList();</b>
+&nbsp;        else
+<b class="nc">&nbsp;            return Collections.&lt;Balance&gt;emptyList();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public List&lt;BalanceDto&gt; mapToDto(List&lt;Balance&gt; balances) {
+<b class="nc">&nbsp;        if(!balances.isEmpty())</b>
+<b class="nc">&nbsp;            return balances.stream().map(balanceDto -&gt; new BalanceDto(</b>
+<b class="nc">&nbsp;                    balanceDto.get_id(),</b>
+<b class="nc">&nbsp;                    balanceDto.getAccountId(),</b>
+<b class="nc">&nbsp;                    balanceDto.getAmount(),</b>
+<b class="nc">&nbsp;                    balanceDto.getCurrency(),</b>
+<b class="nc">&nbsp;                    balanceDto.getCreatedAt(),</b>
+<b class="nc">&nbsp;                    balanceDto.getUpdatedAt()</b>
+<b class="nc">&nbsp;            )).toList();</b>
+&nbsp;        else
+<b class="nc">&nbsp;            return Collections.&lt;BalanceDto&gt;emptyList();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2022-11-01 15:28</div>
+</div>
+</body>
+</html>

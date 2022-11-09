@@ -1,76 +1,57 @@
 package com.maveric.balanceservice.exception;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.http.MediaType;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import com.maveric.balanceservice.dto.ErrorDto;
+import org.junit.jupiter.api.Test;
+import org.springframework.core.MethodParameter;
+import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 
-import static com.maveric.balanceservice.BalanceServiceApplicationTests.APIV1;
-import static com.maveric.balanceservice.BalanceServiceApplicationTests.getBalanceDto;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.mock;
 
-@ContextConfiguration(classes= ExceptionControllerAdvisor.class)
-@RunWith(SpringRunner.class)
-@AutoConfigureMockMvc
-@WebMvcTest(ExceptionControllerAdvisor.class)
-public class ExceptionControllerAdvisorTest {
-    @Autowired
-    private MockMvc mvc;
-
-    @Autowired
-    ObjectMapper objectMapper;
-
+class ExceptionControllerAdvisorTest {
+    private ExceptionControllerAdvisor controllerAdvisor = new ExceptionControllerAdvisor();
     @Test
-    public void whenRequestSyntaxNotValidShouldGetError400WhenRequestMadeToCreateBalanceDetails() throws Exception
-    {
-        mvc.perform(MockMvcRequestBuilders.post(APIV1)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(getBalanceDto()))
-                        .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isNotFound());
-    }
-
-
-    @Test
-    public void whenBalanceIdNotFoundShouldGetError404WhenRequestMadeToGetBalanceDetails() throws Exception
-    {
-        MvcResult mvcResult =
-                mvc.perform(get(APIV1+"/balanceId1")
-                                .contentType(MediaType.APPLICATION_JSON))
-                        .andExpect(status().isNotFound())
-                        .andReturn();
-
-        int expectedErrorResponse = 404;
-        int actualResponse = mvcResult.getResponse().getStatus();
-        System.out.println("actualResponseBody------->"+actualResponse);
-        assertThat(actualResponse)
-                .isEqualTo(expectedErrorResponse);
+    void handleBalanceNotFoundException() {
+        BalanceNotFoundException exception = new BalanceNotFoundException("User Not found");
+        ErrorDto error = controllerAdvisor.handleBalanceNotFoundException(exception);
+        assertEquals("404",error.getCode());
     }
 
     @Test
-    public void whenBalanceIdNotFoundShouldGetError404WhenRequestMadeToDeleteBalanceDetails() throws Exception
-    {
-        MvcResult mvcResult =
-                mvc.perform(delete(APIV1+"/balanceId1")
-                                .contentType(MediaType.APPLICATION_JSON))
-                        .andExpect(status().isNotFound())
-                        .andReturn();
+    void invalidException() {
+        InvalidException exception = new InvalidException("User Not found");
+        ErrorDto error = controllerAdvisor.invalidException(exception);
+        assertEquals("404",error.getCode());
+      }
 
-        int expectedErrorResponse = 404;
-        int actualResponse = mvcResult.getResponse().getStatus();
-        System.out.println("actualResponseBody------->"+actualResponse);
-        assertThat(actualResponse)
-                .isEqualTo(expectedErrorResponse);
-    }
+    @Test
+    void handleHttpRequestMethodNotSupportedException() {
+        MethodParameter methodParameter = mock(MethodParameter.class);
+        BindingResult bindingResult = mock(BindingResult.class);
+        HttpRequestMethodNotSupportedException exception = new HttpRequestMethodNotSupportedException("error");;
+        ErrorDto error = controllerAdvisor.handleHttpRequestMethodNotSupportedException(exception);
+        assertEquals("405",error.getCode());
+      }
+
+    @Test
+    void handleHttpMessageNotReadableException() {
+        HttpMessageNotReadableException exception = new HttpMessageNotReadableException("Exception");
+        ErrorDto error = controllerAdvisor.handleHttpMessageNotReadableException(exception);
+        assertEquals("400",error.getCode());
+      }
+    @Test
+    void handleOtherHttpException() {
+        Exception exception = new Exception();
+        ErrorDto error = controllerAdvisor.handleOtherHttpException(exception);
+        assertEquals("500",error.getCode());
+      }
+
+    @Test
+    void handleBalanceAlreadyExistException() {
+        BalanceAlreadyExistException exception = new BalanceAlreadyExistException("User Already Exist");
+        ErrorDto error = controllerAdvisor.handleBalanceAlreadyExistException(exception);
+        assertEquals("400",error.getCode());
+      }
 }

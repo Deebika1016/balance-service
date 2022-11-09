@@ -3,12 +3,9 @@ package com.maveric.balanceservice.service;
 
 
 import com.maveric.balanceservice.dto.BalanceDto;
-import com.maveric.balanceservice.enumeration.Currency;
 import com.maveric.balanceservice.mapper.BalanceMapper;
 import com.maveric.balanceservice.model.Balance;
 import com.maveric.balanceservice.repository.BalanceRepository;
-import com.maveric.balanceservice.repository.BalanceRepositoryTest;
-import com.maveric.balanceservice.service.BalanceServiceImpl;
 import org.junit.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.runner.RunWith;
@@ -16,12 +13,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.util.Arrays;
-import java.util.List;
 import java.util.Optional;
 
 import static com.maveric.balanceservice.BalanceServiceApplicationTests.getBalance;
