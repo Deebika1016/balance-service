@@ -19,6 +19,15 @@ public class Constants {
     public static final String BAD_REQUEST_MESSAGE="Invalid inputs!";
 
     public static final String INVALID_INPUT_TYPE="Currency should be INR/EURO/DOLLAR";
-    public static final String HttpMessageNotReadableException_MESSAGE="Format Miss Matching";
+    public static final String HTTPMESSAGENOTREADABLEEXCEPTION_MESSAGE="Format Miss Matching";
+    public static final String AUTH_HEADER_ERROR_CODE="401";
+    public static final String AUTH_HEADER_ERROR_MESSAGE="Authorization header is invalid";
+    public static final String SERVICE_UNAVAILABLE_CODE="503";
+    public static final String SERVICE_UNAVAILABLE_MESSAGE="Services down! Kindly contact administrator.";
+
+    public static final String INTERNAL_SERVER_ERROR_CODE="500";
+
+    public static final String INTERNAL_SERVER_ERROR_MESSAGE="Server could not resolve your request.";
+
 }
 

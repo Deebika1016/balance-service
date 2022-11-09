@@ -2,8 +2,7 @@ package com.maveric.balanceservice.controller;
 
 import com.maveric.balanceservice.repository.BalanceRepository;
 import com.maveric.balanceservice.service.BalanceServiceImpl;
-import org.junit.Test;
-import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -24,73 +23,64 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(SpringRunner.class)
 @AutoConfigureMockMvc
 @WebMvcTest(BalanceController.class)
-@Tag("Integration test")
-public class BalanceControllerTest {
-
+class BalanceControllerTest {
     @Autowired
     private MockMvc mvc;
 
     @MockBean
-    private BalanceRepository userRepository;
+    private BalanceRepository balanceRepository;
 
     @MockBean
-    BalanceServiceImpl userService;
-
+    BalanceServiceImpl balanceService;
     @Test
-    public void shouldGetUserWhenRequestMadeToGetUser() throws Exception{
+    void getBalances() throws Exception {
         mvc.perform(get(APIV1)
-                .contentType(MediaType.APPLICATION_JSON))
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andDo(print());
     }
 
-//    @Test
-//    public void shouldReturnInternalServerResponseWhenGetUserFromDBReturnsError() throws Exception{
-//        when(userService.getUsers()).thenThrow(new IllegalArgumentException())
-//        mvc.perform(get(APIV1).contentType(MediaType.APPLICATION_JSON))
-//                .andExpect(status().isInternalServerError())
-//                .andDo(print());
-//
-//    }
-
     @Test
-    public void shouldGetStatus201WhenRequestMadeToCreateUser() throws Exception
-    {
+    void createBalance() throws Exception {
         mvc.perform(post(APIV1)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(asJsonString(getBalanceDto()))
                 )
                 .andExpect(status().isCreated())
                 .andDo(print());
-    }
+      }
+
+//    @Test
+//    void getBalanceDetails() throws Exception {
+//        mvc.perform(get(APIV1+"/1")
+//                        .contentType(MediaType.APPLICATION_JSON))
+//                .andExpect(status().isOk())
+//                .andDo(print());
+//      }
 
     @Test
-    public void shouldGetStatus200WhenRequestMadeToGetUserDetails() throws Exception
-    {
-        mvc.perform(get(APIV1+"/2")
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andDo(print());
-    }
-    @Test
-    public void shouldGetStatus200WhenRequestMadeToDeleteUser() throws Exception
-    {
-        mvc.perform(delete(APIV1+"/2")
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andDo(print());
-    }
-
-    @Test
-    public void shouldGetStatus200WhenRequestMadeToUpdateUser() throws Exception
-    {
+    void updateBalance() throws Exception {
         mvc.perform(put(APIV1+"/2")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(asJsonString(getBalanceDto()))
                 )
                 .andExpect(status().isOk())
                 .andDo(print());
-    }
+      }
 
+    @Test
+    void deleteBalance() throws Exception {
+        mvc.perform(delete(APIV1+"/2")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andDo(print());
+      }
 
+    @Test
+    void testDeleteBalance() throws Exception {
+        mvc.perform(delete(APIV1)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andDo(print());
+      }
 }

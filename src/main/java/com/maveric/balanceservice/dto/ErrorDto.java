@@ -8,7 +8,6 @@ import java.util.Map;
 @Getter
 @Setter
 @NoArgsConstructor
-@AllArgsConstructor(access = AccessLevel.PUBLIC)
 public class ErrorDto {
     String code;
     String message;

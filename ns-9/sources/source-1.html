@@ -1,0 +1,206 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > BalanceServiceImpl</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.maveric.balanceservice.service</a>
+</div>
+
+<h1>Coverage Summary for Class: BalanceServiceImpl (com.maveric.balanceservice.service)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">BalanceServiceImpl</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    25%
+  </span>
+  <span class="absValue">
+    (2/8)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    4.5%
+  </span>
+  <span class="absValue">
+    (2/44)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.maveric.balanceservice.service;
+&nbsp;
+&nbsp;import com.maveric.balanceservice.dto.BalanceDto;
+&nbsp;import com.maveric.balanceservice.exception.BalanceAlreadyExistException;
+&nbsp;import com.maveric.balanceservice.exception.BalanceNotFoundException;
+&nbsp;import com.maveric.balanceservice.mapper.BalanceMapper;
+&nbsp;import com.maveric.balanceservice.model.Balance;
+&nbsp;import com.maveric.balanceservice.repository.BalanceRepository;
+&nbsp;import org.slf4j.Logger;
+&nbsp;import org.springframework.beans.factory.annotation.Autowired;
+&nbsp;
+&nbsp;import org.springframework.stereotype.Service;
+&nbsp;import static com.maveric.balanceservice.constants.Constants.*;
+&nbsp;
+&nbsp;@Service
+<b class="fc">&nbsp;public class BalanceServiceImpl implements BalanceService {</b>
+<b class="fc">&nbsp;    private static final Logger log = org.slf4j.LoggerFactory.getLogger(BalanceServiceImpl.class);</b>
+&nbsp;    @Autowired
+&nbsp;    private BalanceRepository repository;
+&nbsp;
+&nbsp;    @Autowired
+&nbsp;    private BalanceMapper mapper;
+&nbsp;
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public BalanceDto getBalanceByAccountId(String accountId) {
+&nbsp;
+<b class="nc">&nbsp;        Balance balanceResult = repository.findByAccountId(accountId);</b>
+<b class="nc">&nbsp;        if (balanceResult != null)</b>
+&nbsp;        {
+<b class="nc">&nbsp;            log.info(&quot;Retrieved Balance details for given Account Id&quot;);</b>
+<b class="nc">&nbsp;            return mapper.map(balanceResult);</b>
+&nbsp;        }
+&nbsp;        else
+&nbsp;        {
+<b class="nc">&nbsp;            log.info(&quot;Balance not found for given Account Id returns Empty Balance details&quot;);</b>
+<b class="nc">&nbsp;            return new BalanceDto();</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    public BalanceDto createBalance(String accountId, BalanceDto balanceDto) {
+<b class="nc">&nbsp;        if (accountId.equals(balanceDto.getAccountId())) {</b>
+<b class="nc">&nbsp;            if(repository.findByAccountId(accountId)==null) {</b>
+<b class="nc">&nbsp;                balanceDto.setCreatedAt(getCurrentDateTime());</b>
+<b class="nc">&nbsp;                balanceDto.setUpdatedAt(getCurrentDateTime());</b>
+<b class="nc">&nbsp;                Balance balance = mapper.map(balanceDto);</b>
+<b class="nc">&nbsp;                Balance balanceResult = repository.save(balance);</b>
+<b class="nc">&nbsp;                log.error(&quot;Created new Balance successfully&quot;);</b>
+<b class="nc">&nbsp;                return mapper.map(balanceResult);</b>
+&nbsp;            }
+&nbsp;            else {
+<b class="nc">&nbsp;                log.error(&quot;Balance Already Exist for this Account Id&quot;);</b>
+<b class="nc">&nbsp;                throw new BalanceAlreadyExistException(&quot;Balance already exists for this Account Id-&quot;+balanceDto.getAccountId());</b>
+&nbsp;            }
+&nbsp;        } else {
+<b class="nc">&nbsp;            log.error(&quot;Account Id not found! Cannot create balance.&quot;);</b>
+<b class="nc">&nbsp;            throw new BalanceNotFoundException(&quot;Account Id not found! Cannot create balance.&quot;);</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public BalanceDto getBalanceDetails(String accountId,String balanceId) {
+<b class="nc">&nbsp;        log.info(&quot;Retrieved list of Balance details for given Balance Id&quot;);</b>
+<b class="nc">&nbsp;        Balance balanceResult = repository.findById(balanceId).orElseThrow(() -&gt; new BalanceNotFoundException(&quot;Balance not found&quot;));</b>
+<b class="nc">&nbsp;        return mapper.map(balanceResult);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public String deleteBalance(String balanceId) {
+<b class="nc">&nbsp;        if(repository.findById(balanceId).isEmpty())</b>
+&nbsp;        {
+<b class="nc">&nbsp;            log.info(&quot;Balance Id does not exist! Cannot delete Balance details.&quot;);</b>
+<b class="nc">&nbsp;            throw new BalanceNotFoundException(BALANCE_NOT_FOUND_MESSAGE+balanceId);</b>
+&nbsp;        }
+<b class="nc">&nbsp;        repository.deleteById(balanceId);</b>
+<b class="nc">&nbsp;        log.info(&quot;Deleted Balance details for given Balance Id&quot;);</b>
+<b class="nc">&nbsp;        return BALANCE_DELETED_SUCCESS;</b>
+&nbsp;    }
+&nbsp;    @Override
+&nbsp;    public String deleteBalanceByAccountId(String accountId) {
+<b class="nc">&nbsp;        repository.deleteByAccountId(accountId);</b>
+<b class="nc">&nbsp;        return BALANCE_DELETED_SUCCESS;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public BalanceDto updateBalance(String accountId, String balanceId, BalanceDto balanceDto) {
+<b class="nc">&nbsp;        if (accountId.equals(balanceDto.getAccountId())) {</b>
+<b class="nc">&nbsp;            Balance balanceResult = repository.findById(balanceId).orElseThrow(() -&gt; new BalanceNotFoundException(&quot;Balance not found&quot;));</b>
+<b class="nc">&nbsp;            balanceResult.set_id(balanceResult.get_id());</b>
+<b class="nc">&nbsp;            balanceResult.setAmount(balanceDto.getAmount());</b>
+<b class="nc">&nbsp;            balanceResult.setCurrency(balanceDto.getCurrency());</b>
+<b class="nc">&nbsp;            balanceResult.setAccountId(balanceResult.getAccountId());</b>
+<b class="nc">&nbsp;            balanceResult.setCreatedAt(balanceResult.getCreatedAt());</b>
+<b class="nc">&nbsp;            balanceResult.setUpdatedAt(getCurrentDateTime());</b>
+<b class="nc">&nbsp;            Balance accountUpdated = repository.save(balanceResult);</b>
+<b class="nc">&nbsp;            log.info(&quot;Balance details Updated Successfully for given Balance Id&quot;);</b>
+<b class="nc">&nbsp;            return mapper.map(accountUpdated);</b>
+&nbsp;        } else {
+<b class="nc">&nbsp;            log.error(&quot;Account Id not found! Cannot Update Balance&quot;);</b>
+<b class="nc">&nbsp;            throw new BalanceNotFoundException(&quot;Account Id not found! Cannot Update Balance&quot;);</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2022-11-01 15:28</div>
+</div>
+</body>
+</html>

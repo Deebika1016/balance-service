@@ -1,0 +1,215 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > ExceptionControllerAdvisor</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.maveric.balanceservice.exception</a>
+</div>
+
+<h1>Coverage Summary for Class: ExceptionControllerAdvisor (com.maveric.balanceservice.exception)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">ExceptionControllerAdvisor</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    18.2%
+  </span>
+  <span class="absValue">
+    (2/11)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    6.1%
+  </span>
+  <span class="absValue">
+    (3/49)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.maveric.balanceservice.exception;
+&nbsp;
+&nbsp;import com.maveric.balanceservice.dto.ErrorDto;
+&nbsp;import feign.FeignException;
+&nbsp;import org.slf4j.Logger;
+&nbsp;import org.springframework.http.HttpStatus;
+&nbsp;import org.springframework.http.converter.HttpMessageNotReadableException;
+&nbsp;import org.springframework.validation.FieldError;
+&nbsp;import org.springframework.web.HttpRequestMethodNotSupportedException;
+&nbsp;import org.springframework.web.bind.MethodArgumentNotValidException;
+&nbsp;import org.springframework.web.bind.annotation.ExceptionHandler;
+&nbsp;import org.springframework.web.bind.annotation.ResponseStatus;
+&nbsp;import org.springframework.web.bind.annotation.RestControllerAdvice;
+&nbsp;
+&nbsp;import java.util.HashMap;
+&nbsp;import java.util.Map;
+&nbsp;
+&nbsp;import static com.maveric.balanceservice.constants.Constants.*;
+&nbsp;
+&nbsp;@RestControllerAdvice
+<b class="fc">&nbsp;public class ExceptionControllerAdvisor {</b>
+<b class="fc">&nbsp;    private static final Logger log = org.slf4j.LoggerFactory.getLogger(ExceptionControllerAdvisor.class);</b>
+<b class="fc">&nbsp;    String exceptionString=&quot;&quot;;</b>
+&nbsp;    @ExceptionHandler(BalanceNotFoundException.class)
+&nbsp;    @ResponseStatus(HttpStatus.NOT_FOUND)
+&nbsp;    public static final ErrorDto handleBalanceNotFoundException(BalanceNotFoundException exception) {
+<b class="nc">&nbsp;        ErrorDto errorDto = new ErrorDto();</b>
+<b class="nc">&nbsp;        errorDto.setCode(BALANCE_NOT_FOUND_CODE);</b>
+<b class="nc">&nbsp;        errorDto.setMessage(exception.getMessage());</b>
+<b class="nc">&nbsp;        return errorDto;</b>
+&nbsp;    }
+&nbsp;    @ExceptionHandler(InvalidException.class)
+&nbsp;    @ResponseStatus(HttpStatus.NOT_FOUND)
+&nbsp;    public static final ErrorDto invalidException(InvalidException exception) {
+<b class="nc">&nbsp;        ErrorDto errorDto = new ErrorDto();</b>
+<b class="nc">&nbsp;        errorDto.setCode(BALANCE_NOT_FOUND_CODE);</b>
+<b class="nc">&nbsp;        errorDto.setMessage(exception.getMessage());</b>
+<b class="nc">&nbsp;        return errorDto;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @ExceptionHandler(MethodArgumentNotValidException.class)
+&nbsp;    @ResponseStatus(HttpStatus.BAD_REQUEST)
+&nbsp;    public ErrorDto handleValidationExceptions(
+&nbsp;            MethodArgumentNotValidException ex) {
+<b class="nc">&nbsp;        ErrorDto errorDto = new ErrorDto();</b>
+<b class="nc">&nbsp;        Map&lt;String, String&gt; errors = new HashMap&lt;&gt;();</b>
+<b class="nc">&nbsp;        ex.getBindingResult().getAllErrors().forEach(error -&gt; {</b>
+<b class="nc">&nbsp;            String fieldName = ((FieldError) error).getField();</b>
+<b class="nc">&nbsp;            String errorMessage = error.getDefaultMessage();</b>
+<b class="nc">&nbsp;            errors.put(fieldName, errorMessage);</b>
+&nbsp;        });
+&nbsp;
+<b class="nc">&nbsp;        errorDto.setCode(BAD_REQUEST_CODE);</b>
+<b class="nc">&nbsp;        errorDto.setMessage(BAD_REQUEST_MESSAGE);</b>
+<b class="nc">&nbsp;        errorDto.setErrors(errors);</b>
+<b class="nc">&nbsp;        return errorDto;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
+&nbsp;    @ResponseStatus(HttpStatus.METHOD_NOT_ALLOWED)
+&nbsp;    public ErrorDto handleHttpRequestMethodNotSupportedException(
+&nbsp;            HttpRequestMethodNotSupportedException ex) {
+<b class="nc">&nbsp;        ErrorDto errorDto = new ErrorDto();</b>
+<b class="nc">&nbsp;        errorDto.setCode(METHOD_NOT_ALLOWED_CODE);</b>
+<b class="nc">&nbsp;        errorDto.setMessage(METHOD_NOT_ALLOWED_MESSAGE);</b>
+<b class="nc">&nbsp;        return errorDto;</b>
+&nbsp;    }
+&nbsp;    @ExceptionHandler(HttpMessageNotReadableException.class)
+&nbsp;    @ResponseStatus(HttpStatus.BAD_REQUEST)
+&nbsp;    public ErrorDto handleHttpMessageNotReadableException(
+&nbsp;            HttpMessageNotReadableException ex) {
+<b class="nc">&nbsp;        ErrorDto errorDto = new ErrorDto();</b>
+<b class="nc">&nbsp;        errorDto.setCode(BAD_REQUEST_CODE);</b>
+<b class="nc">&nbsp;        if(ex.getMessage().contains(&quot;com.maveric.balanceservice.enumeration.Currency&quot;))//NOSONAR</b>
+<b class="nc">&nbsp;            errorDto.setMessage(INVALID_INPUT_TYPE);</b>
+&nbsp;        else
+<b class="nc">&nbsp;            errorDto.setMessage(HTTPMESSAGENOTREADABLEEXCEPTION_MESSAGE);</b>
+<b class="nc">&nbsp;        return errorDto;</b>
+&nbsp;    }
+&nbsp;    @ExceptionHandler(BalanceAlreadyExistException.class)
+&nbsp;    @ResponseStatus(HttpStatus.BAD_REQUEST)
+&nbsp;    public final ErrorDto handleBalanceAlreadyExistException(BalanceAlreadyExistException exception) {
+<b class="nc">&nbsp;        ErrorDto errorDto = new ErrorDto();</b>
+<b class="nc">&nbsp;        errorDto.setCode(BAD_REQUEST_CODE);</b>
+<b class="nc">&nbsp;        errorDto.setMessage(exception.getMessage());</b>
+<b class="nc">&nbsp;        exceptionString = exception.getMessage();</b>
+<b class="nc">&nbsp;        log.error(&quot;{}-&gt;{}&quot;,BAD_REQUEST_CODE,exceptionString);</b>
+<b class="nc">&nbsp;        return errorDto;</b>
+&nbsp;    }
+&nbsp;    @ExceptionHandler(Exception.class)
+&nbsp;    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+&nbsp;    public final ErrorDto handleOtherHttpException(Exception exception) {
+<b class="nc">&nbsp;        ErrorDto errorDto = new ErrorDto();</b>
+<b class="nc">&nbsp;        errorDto.setCode(INTERNAL_SERVER_ERROR_CODE);</b>
+<b class="nc">&nbsp;        errorDto.setMessage(INTERNAL_SERVER_ERROR_MESSAGE);</b>
+<b class="nc">&nbsp;        exceptionString = exception.getMessage();</b>
+<b class="nc">&nbsp;        log.error(&quot;{} {}-&gt; {}&quot;,INTERNAL_SERVER_ERROR_CODE,INTERNAL_SERVER_ERROR_MESSAGE,exceptionString);</b>
+<b class="nc">&nbsp;        return errorDto;</b>
+&nbsp;    }
+&nbsp;    @ExceptionHandler(FeignException.class)
+&nbsp;    @ResponseStatus(HttpStatus.SERVICE_UNAVAILABLE)
+&nbsp;    public ErrorDto handleHttpFeignException(
+&nbsp;            FeignException ex) {
+<b class="nc">&nbsp;        ErrorDto errorDto = new ErrorDto();</b>
+<b class="nc">&nbsp;        errorDto.setCode(SERVICE_UNAVAILABLE_CODE);</b>
+<b class="nc">&nbsp;        errorDto.setMessage(SERVICE_UNAVAILABLE_MESSAGE);</b>
+<b class="nc">&nbsp;        exceptionString = ex.getMessage();</b>
+<b class="nc">&nbsp;        log.error(&quot;{} -&gt; {} -&gt; {}&quot;,SERVICE_UNAVAILABLE_CODE,SERVICE_UNAVAILABLE_MESSAGE,exceptionString);</b>
+<b class="nc">&nbsp;        return errorDto;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2022-11-01 15:28</div>
+</div>
+</body>
+</html>
